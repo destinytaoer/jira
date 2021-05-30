@@ -2,6 +2,7 @@ import { FC, memo } from "react";
 import { Button, Form, Input } from "antd";
 import { useAuth } from "context/authContext";
 import { IAuthForm } from "typings/user";
+import { LongButton } from "UnauthenticatedApp";
 
 const RegisterPage: FC = memo(() => {
   const { register } = useAuth();
@@ -27,9 +28,9 @@ const RegisterPage: FC = memo(() => {
         <Input type="password" placeholder="密码" id="password" />
       </Form.Item>
       <Form.Item>
-        <Button type="primary" htmlType="submit">
+        <LongButton type="primary" htmlType="submit">
           注册
-        </Button>
+        </LongButton>
       </Form.Item>
     </Form>
   );
