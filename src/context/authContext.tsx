@@ -1,11 +1,24 @@
+import useMount from "hooks/useMount";
 import { createContext, ReactNode, useContext, useState } from "react";
 import { IUser } from "typings/user";
+import { http } from "utils/http";
 import * as auth from "../auth";
 
 interface IAuthForm {
   username: string;
   password: string;
 }
+
+const initUser = async () => {
+  let user = null;
+  const token = auth.getToken();
+
+  if (token) {
+    const data = await http("me", { token });
+    user = data.user;
+  }
+  return user;
+};
 
 const AuthContext =
   createContext<
@@ -25,6 +38,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const login = (form: IAuthForm) => auth.login(form).then(setUser);
   const register = (form: IAuthForm) => auth.register(form).then(setUser);
   const logout = () => auth.logout().then(() => setUser(null));
+
+  useMount(() => {
+    initUser().then(setUser);
+  });
 
   return (
     <AuthContext.Provider value={{ user, login, register, logout }}>

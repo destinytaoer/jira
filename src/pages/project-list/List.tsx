@@ -1,10 +1,12 @@
 import { FC } from "react";
+import { IUser } from "typings/user";
 import { IListItem } from "./typings";
 
 interface IProps {
   list: IListItem[];
+  users: IUser[];
 }
-const List: FC<IProps> = ({ list }) => {
+const List: FC<IProps> = ({ list, users }) => {
   return (
     <table>
       <thead>
@@ -17,7 +19,10 @@ const List: FC<IProps> = ({ list }) => {
         {list.map((project) => (
           <tr key={project.id}>
             <td>{project.name}</td>
-            <td>{project.personName}</td>
+            <td>
+              {users.find((user) => user.id === project.personId)?.name ??
+                "未知"}
+            </td>
           </tr>
         ))}
       </tbody>

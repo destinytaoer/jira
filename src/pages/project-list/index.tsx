@@ -7,6 +7,7 @@ import { IListItem } from "./typings";
 import { cleanObject } from "utils";
 import useMount from "hooks/useMount";
 import useDebounce from "hooks/useDebounce";
+import { useHttp } from "utils/http";
 
 const apiUrl = process.env.REACT_APP_API_URL;
 const ProjectListPage = () => {
@@ -18,29 +19,20 @@ const ProjectListPage = () => {
 
   const [users, setUsers] = useState<IUser[]>([]);
   const [list, setList] = useState<IListItem[]>([]);
+  const client = useHttp();
 
   useEffect(() => {
-    fetch(
-      `${apiUrl}/projects?${qs.stringify(cleanObject(debounceParam))}`
-    ).then(async (response) => {
-      if (response.ok) {
-        setList(await response.json());
-      }
-    });
+    client("projects", { data: debounceParam }).then(setList);
   }, [debounceParam]);
 
   useMount(() => {
-    fetch(`${apiUrl}/users`).then(async (response) => {
-      if (response.ok) {
-        setUsers(await response.json());
-      }
-    });
+    client("users").then(setUsers);
   });
 
   return (
     <div>
       <SearchPanel param={param} users={users} setParam={setParam} />
-      <List list={list} />
+      <List list={list} users={users} />
     </div>
   );
 };
