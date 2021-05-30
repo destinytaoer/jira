@@ -1,16 +1,15 @@
 import { FC, FormEvent, memo } from "react";
 import { useAuth } from "context/authContext";
 
-const LoginPage: FC = memo(() => {
-  const { login } = useAuth();
-
+const RegisterPage: FC = memo(() => {
+  const { register } = useAuth();
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     const username = (e.currentTarget.elements[0] as HTMLInputElement).value;
     const password = (e.currentTarget.elements[1] as HTMLInputElement).value;
 
-    login({
+    register({
       username,
       password,
     });
@@ -25,9 +24,9 @@ const LoginPage: FC = memo(() => {
         <label htmlFor="password">密码</label>
         <input type="password" id="password" />
       </div>
-      <button type="submit">登录</button>
+      <button type="submit">注册</button>
     </form>
   );
 });
 
-export default LoginPage;
+export default RegisterPage;
