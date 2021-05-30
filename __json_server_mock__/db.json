@@ -1,3 +1,46 @@
 {
-  "users": []
+  "users": [
+    {
+      "id": "1",
+      "name": "张三"
+    },
+    {
+      "id": "2",
+      "name": "李四"
+    },
+    {
+      "id": "3",
+      "name": "王五"
+    },
+    {
+      "id": "4",
+      "name": "赵六"
+    }
+  ],
+  "projects": [
+    {
+      "id": "1",
+      "name": "开思电商",
+      "personId": "1",
+      "personName": "张三"
+    },
+    {
+      "id": "2",
+      "name": "1 号车间",
+      "personId": "2",
+      "personName": "李四"
+    },
+    {
+      "id": "3",
+      "name": "小狮快送",
+      "personId": "3",
+      "personName": "王五"
+    },
+    {
+      "id": "4",
+      "name": "中小客户版本",
+      "personId": "4",
+      "personName": "赵六"
+    }
+  ]
 }
