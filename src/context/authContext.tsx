@@ -1,13 +1,8 @@
 import useMount from "hooks/useMount";
 import { createContext, ReactNode, useContext, useState } from "react";
-import { IUser } from "typings/user";
+import { IAuthForm, IUser } from "typings/user";
 import { http } from "utils/http";
 import * as auth from "../auth";
-
-interface IAuthForm {
-  username: string;
-  password: string;
-}
 
 const initUser = async () => {
   let user = null;

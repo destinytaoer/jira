@@ -1,6 +1,7 @@
 import { Dispatch, FC, memo } from "react";
 import { IParam } from "./typings";
 import { IUser } from "typings/user";
+import { Form, Input, Select } from "antd";
 
 interface IProps {
   param: IParam;
@@ -9,9 +10,9 @@ interface IProps {
 }
 const SearchPanel: FC<IProps> = memo(({ param, users, setParam }) => {
   return (
-    <form action="">
-      <div>
-        <input
+    <Form>
+      <Form.Item>
+        <Input
           type="text"
           value={param.name}
           onChange={(e) =>
@@ -21,19 +22,19 @@ const SearchPanel: FC<IProps> = memo(({ param, users, setParam }) => {
             })
           }
         />
-        <select
+        <Select
           value={param.personId}
-          onChange={(e) => setParam({ ...param, personId: e.target.value })}
+          onChange={(value) => setParam({ ...param, personId: value })}
         >
-          <option value="">负责人</option>
+          <Select.Option value="">负责人</Select.Option>
           {users.map((user) => (
-            <option key={user.id} value={user.id}>
+            <Select.Option key={user.id} value={user.id}>
               {user.name}
-            </option>
+            </Select.Option>
           ))}
-        </select>
-      </div>
-    </form>
+        </Select>
+      </Form.Item>
+    </Form>
   );
 });
 

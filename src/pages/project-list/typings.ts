@@ -3,7 +3,7 @@ export interface IParam {
   personId: string;
 }
 
-export interface IListItem {
+export interface IProject {
   id: string;
   name: string;
   personId: string;
