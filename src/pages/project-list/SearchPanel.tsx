@@ -1,5 +1,6 @@
 import { Dispatch, FC, memo } from "react";
-import { IParam, IUser } from "./typings";
+import { IParam } from "./typings";
+import { IUser } from "typings/user";
 
 interface IProps {
   param: IParam;

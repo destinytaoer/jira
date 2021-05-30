@@ -3,11 +3,6 @@ export interface IParam {
   personId: string;
 }
 
-export interface IUser {
-  id: string;
-  name: string;
-}
-
 export interface IListItem {
   id: string;
   name: string;

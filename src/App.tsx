@@ -1,6 +1,3 @@
-import React from "react";
-import logo from "./logo.svg";
-import "./App.css";
 import ProjectListPage from "pages/project-list";
 import LoginPage from "pages/login";
 
