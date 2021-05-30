@@ -4,6 +4,8 @@ import List from "./List";
 import SearchPanel from "./SearchPanel";
 import { IListItem, IUser } from "./typings";
 import { cleanObject } from "utils";
+import useMount from "hooks/useMount";
+import useDebounce from "hooks/useDebounce";
 
 const apiUrl = process.env.REACT_APP_API_URL;
 const ProjectListPage = () => {
@@ -11,27 +13,28 @@ const ProjectListPage = () => {
     name: "",
     personId: "",
   });
+  const debounceParam = useDebounce(param);
 
   const [users, setUsers] = useState<IUser[]>([]);
   const [list, setList] = useState<IListItem[]>([]);
 
   useEffect(() => {
-    fetch(`${apiUrl}/projects?${qs.stringify(cleanObject(param))}`).then(
-      async (response) => {
-        if (response.ok) {
-          setList(await response.json());
-        }
+    fetch(
+      `${apiUrl}/projects?${qs.stringify(cleanObject(debounceParam))}`
+    ).then(async (response) => {
+      if (response.ok) {
+        setList(await response.json());
       }
-    );
-  }, [param]);
+    });
+  }, [debounceParam]);
 
-  useEffect(() => {
+  useMount(() => {
     fetch(`${apiUrl}/users`).then(async (response) => {
       if (response.ok) {
         setUsers(await response.json());
       }
     });
-  }, [param]);
+  });
 
   return (
     <div>
