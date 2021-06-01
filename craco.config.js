@@ -1,6 +1,9 @@
 const CracoLessPlugin = require("craco-less");
 
 module.exports = {
+  babel: {
+    presets: ["@emotion/babel-preset-css-prop"],
+  },
   plugins: [
     {
       plugin: CracoLessPlugin,

@@ -4,12 +4,11 @@ import List from "./List";
 import SearchPanel from "./SearchPanel";
 import { IUser } from "typings/user";
 import { IProject } from "./typings";
-import { cleanObject } from "utils";
 import useMount from "hooks/useMount";
 import useDebounce from "hooks/useDebounce";
 import { useHttp } from "utils/http";
+import styled from "@emotion/styled";
 
-const apiUrl = process.env.REACT_APP_API_URL;
 const ProjectListPage = () => {
   const [param, setParam] = useState({
     name: "",
@@ -30,11 +29,16 @@ const ProjectListPage = () => {
   });
 
   return (
-    <div>
+    <Container>
+      <h2>项目列表</h2>
       <SearchPanel param={param} users={users} setParam={setParam} />
       <List list={list} users={users} />
-    </div>
+    </Container>
   );
 };
+
+const Container = styled.div`
+  padding: 3.2rem;
+`;
 
 export default ProjectListPage;

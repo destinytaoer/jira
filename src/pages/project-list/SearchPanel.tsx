@@ -1,3 +1,4 @@
+import { jsx } from "@emotion/react";
 import { Dispatch, FC, memo } from "react";
 import { IParam } from "./typings";
 import { IUser } from "typings/user";
@@ -10,9 +11,10 @@ interface IProps {
 }
 const SearchPanel: FC<IProps> = memo(({ param, users, setParam }) => {
   return (
-    <Form>
+    <Form css={{ marginBottom: "2rem" }} layout="inline">
       <Form.Item>
         <Input
+          placeholder="项目名"
           type="text"
           value={param.name}
           onChange={(e) =>
@@ -22,6 +24,8 @@ const SearchPanel: FC<IProps> = memo(({ param, users, setParam }) => {
             })
           }
         />
+      </Form.Item>
+      <Form.Item>
         <Select
           value={param.personId}
           onChange={(value) => setParam({ ...param, personId: value })}
