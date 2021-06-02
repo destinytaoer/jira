@@ -1,12 +1,13 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import styled from "@emotion/styled";
+import { Typography } from "antd";
+
 import List from "./List";
 import SearchPanel from "./SearchPanel";
-import { IUser } from "typings/user";
-import { IProject } from "./typings";
-import useMount from "hooks/useMount";
 import useDebounce from "hooks/useDebounce";
-import { useHttp } from "utils/http";
-import styled from "@emotion/styled";
+
+import useProjects from "./useProjects";
+import useUsers from "./useUsers";
 
 const ProjectListPage = () => {
   const [param, setParam] = useState({
@@ -14,25 +15,18 @@ const ProjectListPage = () => {
     personId: "",
   });
   const debounceParam = useDebounce(param);
+  const { isLoading, error, data: list } = useProjects(debounceParam);
 
-  const [users, setUsers] = useState<IUser[]>([]);
-  const [list, setList] = useState<IProject[]>([]);
-  const client = useHttp();
-
-  useEffect(() => {
-    client("projects", { data: debounceParam }).then(setList);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [debounceParam]);
-
-  useMount(() => {
-    client("users").then(setUsers);
-  });
+  const { data: users } = useUsers();
 
   return (
     <Container>
       <h2>项目列表</h2>
-      <SearchPanel param={param} users={users} setParam={setParam} />
-      <List list={list} users={users} />
+      <SearchPanel param={param} users={users ?? []} setParam={setParam} />
+      {error ? (
+        <Typography.Text type="danger">{error.message}</Typography.Text>
+      ) : null}
+      <List loading={isLoading} dataSource={list ?? []} users={users ?? []} />
     </Container>
   );
 };

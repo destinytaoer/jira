@@ -1,19 +1,17 @@
-import { Table } from "antd";
+import { Table, TableProps } from "antd";
 import dayjs from "dayjs";
 import { FC } from "react";
 import { IUser } from "typings/user";
 import { IProject } from "./typings";
 
-interface IProps {
-  list: IProject[];
+interface IProps extends TableProps<IProject> {
   users: IUser[];
 }
-const List: FC<IProps> = ({ list, users }) => {
+const List: FC<IProps> = ({ users, ...rest }) => {
   return (
     <Table
+      rowKey="id"
       pagination={false}
-      dataSource={list}
-      rowKey={(project) => project.id}
       columns={[
         {
           title: "名称",
@@ -48,6 +46,7 @@ const List: FC<IProps> = ({ list, users }) => {
           },
         },
       ]}
+      {...rest}
     />
   );
 };
