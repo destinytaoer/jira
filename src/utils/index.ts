@@ -1,4 +1,6 @@
 export const isFalsy = (value: any) => (value === 0 ? false : !value);
+export const isVoid = (value: any) =>
+  value === undefined || value === null || value === "";
 
 /** 清除对象中的空值 */
 export function cleanObject(obj: { [key: string]: any }) {
@@ -6,7 +8,7 @@ export function cleanObject(obj: { [key: string]: any }) {
 
   Object.keys(result).forEach((key) => {
     const value = result[key];
-    if (isFalsy(value)) {
+    if (isVoid(value)) {
       delete result[key];
     }
   });

@@ -13,6 +13,7 @@ const List: FC<IProps> = ({ list, users }) => {
     <Table
       pagination={false}
       dataSource={list}
+      rowKey={(project) => project.id}
       columns={[
         {
           title: "名称",

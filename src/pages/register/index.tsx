@@ -1,5 +1,5 @@
 import { FC, memo } from "react";
-import { Button, Form, Input } from "antd";
+import { Form, Input } from "antd";
 import { useAuth } from "context/authContext";
 import { IAuthForm } from "typings/user";
 import { LongButton } from "UnauthenticatedApp";

@@ -1,4 +1,3 @@
-import { jsx } from "@emotion/react";
 import { Dispatch, FC, memo } from "react";
 import { IParam } from "./typings";
 import { IUser } from "typings/user";

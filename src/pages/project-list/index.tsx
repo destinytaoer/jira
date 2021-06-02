@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import qs from "qs";
 import List from "./List";
 import SearchPanel from "./SearchPanel";
 import { IUser } from "typings/user";
@@ -22,6 +21,7 @@ const ProjectListPage = () => {
 
   useEffect(() => {
     client("projects", { data: debounceParam }).then(setList);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [debounceParam]);
 
   useMount(() => {
