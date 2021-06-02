@@ -1,6 +1,6 @@
 import { FC, memo, useState } from "react";
 import styled from "@emotion/styled";
-import { Button, Card, Divider } from "antd";
+import { Button, Card, Divider, Typography } from "antd";
 import LoginPage from "pages/login";
 import RegisterPage from "pages/register";
 import logo from "assets/logo.svg";
@@ -9,6 +9,7 @@ import right from "assets/right.svg";
 
 const UnauthenticatedApp: FC = memo(() => {
   const [isRegister, setRegister] = useState(false);
+  const [error, setError] = useState<Error | null>(null);
 
   return (
     <Container>
@@ -16,7 +17,14 @@ const UnauthenticatedApp: FC = memo(() => {
       <Background />
       <ShadowCard>
         <Title>{isRegister ? "请注册" : "请登录"}</Title>
-        {isRegister ? <RegisterPage /> : <LoginPage />}
+        {error ? (
+          <Typography.Text type="danger">{error.message}</Typography.Text>
+        ) : null}
+        {isRegister ? (
+          <RegisterPage onError={setError} />
+        ) : (
+          <LoginPage onError={setError} />
+        )}
         <Divider />
         <Button type="link" onClick={() => setRegister(!isRegister)}>
           切换到{isRegister ? "已经有账号了? 直接登录" : "没有账号? 注册新账号"}

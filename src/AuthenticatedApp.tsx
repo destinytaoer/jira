@@ -28,13 +28,13 @@ const AuthenticatedApp: FC = memo(() => {
           <Dropdown
             overlay={
               <Menu>
-                <Menu.Item key="logout">登出</Menu.Item>
+                <Menu.Item key="logout" onClick={logout}>
+                  登出
+                </Menu.Item>
               </Menu>
             }
           >
-            <Button type="link" onClick={logout}>
-              Hi, {user?.name}
-            </Button>
+            <Button type="link">Hi, {user?.name}</Button>
           </Dropdown>
         </HeaderRight>
       </Header>

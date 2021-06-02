@@ -1,17 +1,21 @@
-import { FC, memo } from "react";
+import { memo } from "react";
 import { Form, Input } from "antd";
 import { useAuth } from "context/authContext";
 import { IAuthForm } from "typings/user";
 import { LongButton } from "UnauthenticatedApp";
+import useAsync from "hooks/useAsync";
 
-const LoginPage: FC = memo(() => {
+const LoginPage = memo(({ onError }: { onError: (error: Error) => void }) => {
   const { login } = useAuth();
+  const { run, isLoading } = useAsync(undefined, { throwOnError: true });
 
   const handleSubmit = ({ username, password }: IAuthForm) => {
-    login({
-      username,
-      password,
-    });
+    run(
+      login({
+        username,
+        password,
+      })
+    ).catch(onError);
   };
   return (
     <Form onFinish={handleSubmit}>
@@ -28,7 +32,7 @@ const LoginPage: FC = memo(() => {
         <Input type="password" placeholder="密码" id="password" />
       </Form.Item>
       <Form.Item>
-        <LongButton type="primary" htmlType="submit">
+        <LongButton loading={isLoading} type="primary" htmlType="submit">
           登录
         </LongButton>
       </Form.Item>
