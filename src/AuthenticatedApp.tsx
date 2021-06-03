@@ -8,6 +8,7 @@ import styled from "@emotion/styled";
 import { Row } from "components/lib";
 import { ReactComponent as SoftwareLogo } from "assets/software-logo.svg";
 import ProjectPage from "pages/project";
+import { resetRoute } from "utils";
 
 /**
  * grid 和 flex 应用场景
@@ -25,6 +26,8 @@ const AuthenticatedApp: FC = memo(() => {
           <Routes>
             <Route path="/projects" element={<ProjectListPage />} />
             <Route path="/projects/:projectId/*" element={<ProjectPage />} />
+            {/* 默认路由 */}
+            <Navigate to="/projects" />
           </Routes>
         </Router>
       </Main>
@@ -38,7 +41,9 @@ const PageHeader = () => {
   return (
     <Header between>
       <HeaderLeft gap={true}>
-        <SoftwareLogo width="18rem" color="rgb(38, 132, 255)" />
+        <Button type="link" onClick={resetRoute}>
+          <SoftwareLogo width="18rem" color="rgb(38, 132, 255)" />
+        </Button>
         <h3>项目</h3>
         <h3>用户</h3>
       </HeaderLeft>
