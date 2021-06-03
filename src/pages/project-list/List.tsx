@@ -1,6 +1,7 @@
+import { FC } from "react";
+import { Link } from "react-router-dom";
 import { Table, TableProps } from "antd";
 import dayjs from "dayjs";
-import { FC } from "react";
 import { IUser } from "typings/user";
 import { IProject } from "./typings";
 
@@ -15,8 +16,10 @@ const List: FC<IProps> = ({ users, ...rest }) => {
       columns={[
         {
           title: "名称",
-          dataIndex: "name",
           sorter: (a, b) => a.name.localeCompare(b.name),
+          render(value, project) {
+            return <Link to={String(project.id)}>{project.name}</Link>;
+          },
         },
         {
           title: "部门",

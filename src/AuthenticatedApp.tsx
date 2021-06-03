@@ -1,10 +1,13 @@
 import { FC, memo } from "react";
+import { Navigate, Route, Routes } from "react-router";
+import { BrowserRouter as Router } from "react-router-dom";
+import { Button, Dropdown, Menu } from "antd";
 import ProjectListPage from "pages/project-list";
 import { useAuth } from "context/authContext";
 import styled from "@emotion/styled";
 import { Row } from "components/lib";
 import { ReactComponent as SoftwareLogo } from "assets/software-logo.svg";
-import { Button, Dropdown, Menu } from "antd";
+import ProjectPage from "pages/project";
 
 /**
  * grid 和 flex 应用场景
@@ -14,36 +17,47 @@ import { Button, Dropdown, Menu } from "antd";
  * 从布局出发 grid: 先规划网格(数量一般固定), 然后再把元素往里填充
  */
 const AuthenticatedApp: FC = memo(() => {
-  const { logout, user } = useAuth();
-
   return (
     <Container>
-      <Header between>
-        <HeaderLeft gap={true}>
-          <SoftwareLogo width="18rem" color="rgb(38, 132, 255)" />
-          <h3>项目</h3>
-          <h3>用户</h3>
-        </HeaderLeft>
-        <HeaderRight>
-          <Dropdown
-            overlay={
-              <Menu>
-                <Menu.Item key="logout" onClick={logout}>
-                  登出
-                </Menu.Item>
-              </Menu>
-            }
-          >
-            <Button type="link">Hi, {user?.name}</Button>
-          </Dropdown>
-        </HeaderRight>
-      </Header>
+      <PageHeader />
       <Main>
-        <ProjectListPage />
+        <Router>
+          <Routes>
+            <Route path="/projects" element={<ProjectListPage />} />
+            <Route path="/projects/:projectId/*" element={<ProjectPage />} />
+          </Routes>
+        </Router>
       </Main>
     </Container>
   );
 });
+
+const PageHeader = () => {
+  const { logout, user } = useAuth();
+
+  return (
+    <Header between>
+      <HeaderLeft gap={true}>
+        <SoftwareLogo width="18rem" color="rgb(38, 132, 255)" />
+        <h3>项目</h3>
+        <h3>用户</h3>
+      </HeaderLeft>
+      <HeaderRight>
+        <Dropdown
+          overlay={
+            <Menu>
+              <Menu.Item key="logout" onClick={logout}>
+                登出
+              </Menu.Item>
+            </Menu>
+          }
+        >
+          <Button type="link">Hi, {user?.name}</Button>
+        </Dropdown>
+      </HeaderRight>
+    </Header>
+  );
+};
 
 const Container = styled.div`
   display: grid;
