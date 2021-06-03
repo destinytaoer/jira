@@ -6,10 +6,13 @@ import RegisterPage from "pages/register";
 import logo from "assets/logo.svg";
 import left from "assets/left.svg";
 import right from "assets/right.svg";
+import useDocumentTitle from "hooks/useDocumentTitle";
 
 const UnauthenticatedApp: FC = memo(() => {
   const [isRegister, setRegister] = useState(false);
   const [error, setError] = useState<Error | null>(null);
+
+  useDocumentTitle("请登录注册以继续");
 
   return (
     <Container>

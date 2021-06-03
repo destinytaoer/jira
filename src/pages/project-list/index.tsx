@@ -8,6 +8,7 @@ import useDebounce from "hooks/useDebounce";
 
 import useProjects from "./useProjects";
 import useUsers from "./useUsers";
+import useDocumentTitle from "hooks/useDocumentTitle";
 
 const ProjectListPage = () => {
   const [param, setParam] = useState({
@@ -18,6 +19,8 @@ const ProjectListPage = () => {
   const { isLoading, error, data: list } = useProjects(debounceParam);
 
   const { data: users } = useUsers();
+
+  useDocumentTitle("项目列表");
 
   return (
     <Container>
