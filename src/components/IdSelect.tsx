@@ -24,7 +24,7 @@ const IdSelect = (props: IdSelectProps) => {
 
   return (
     <Select
-      value={toNumber(value)}
+      value={options?.length ? toNumber(value) : 0}
       onChange={(value) => onChange(toNumber(value) || undefined)}
       {...rest}
     >
@@ -32,7 +32,9 @@ const IdSelect = (props: IdSelectProps) => {
         <Select.Option value={0}>{defaultOptionName}</Select.Option>
       ) : null}
       {options?.map((option) => (
-        <Select.Option value={option.id}>{option.name}</Select.Option>
+        <Select.Option key={option.id} value={option.id}>
+          {option.name}
+        </Select.Option>
       ))}
     </Select>
   );

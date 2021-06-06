@@ -1,4 +1,4 @@
-import { useState, memo } from "react";
+import { memo } from "react";
 import styled from "@emotion/styled";
 import { Typography } from "antd";
 
@@ -7,18 +7,18 @@ import SearchPanel from "./SearchPanel";
 import useDebounce from "hooks/useDebounce";
 
 import useProjects from "./useProjects";
-import useUsers from "./useUsers";
+import useUsers from "../../hooks/useUsers";
 import useDocumentTitle from "hooks/useDocumentTitle";
-import useUrlQueryParam from "hooks/useUrlQueryParam";
+import useProjectSearchParams from "./useProjectSearchParams";
 
 const ProjectListPage = () => {
-  const [param, setParam] = useUrlQueryParam(["name", "personId"]);
+  useDocumentTitle("项目列表");
+
+  const [param, setParam] = useProjectSearchParams();
   const debounceParam = useDebounce(param);
   const { isLoading, error, data: list } = useProjects(debounceParam);
 
   const { data: users } = useUsers();
-
-  useDocumentTitle("项目列表");
 
   return (
     <Container>

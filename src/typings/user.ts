@@ -5,7 +5,7 @@ export interface IAuthForm {
 }
 
 export interface IUser {
-  id: string;
+  id: number;
   name: string;
   token: string;
 }

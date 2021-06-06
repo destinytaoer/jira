@@ -1,12 +1,7 @@
-export interface IParam {
-  name: string;
-  personId: string;
-}
-
 export interface IProject {
-  id: string;
+  id: number;
   name: string;
-  personId: string;
+  personId: number;
   pin: boolean;
   organization: string;
   created?: number;
