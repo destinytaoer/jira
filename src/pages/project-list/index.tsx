@@ -1,6 +1,6 @@
 import { memo } from "react";
 import styled from "@emotion/styled";
-import { Typography } from "antd";
+import { Button, Typography } from "antd";
 
 import List from "./List";
 import SearchPanel from "./SearchPanel";
@@ -16,7 +16,7 @@ const ProjectListPage = () => {
 
   const [param, setParam] = useProjectSearchParams();
   const debounceParam = useDebounce(param);
-  const { isLoading, error, data: list } = useProjects(debounceParam);
+  const { isLoading, error, data: list, retry } = useProjects(debounceParam);
 
   const { data: users } = useUsers();
 
@@ -27,12 +27,17 @@ const ProjectListPage = () => {
       {error ? (
         <Typography.Text type="danger">{error.message}</Typography.Text>
       ) : null}
-      <List loading={isLoading} dataSource={list ?? []} users={users ?? []} />
+      <List
+        refresh={retry}
+        loading={isLoading}
+        dataSource={list ?? []}
+        users={users ?? []}
+      />
     </Container>
   );
 };
 
-ProjectListPage.whyDidYouRender = true;
+ProjectListPage.whyDidYouRender = false;
 
 const Container = styled.div`
   padding: 3.2rem;

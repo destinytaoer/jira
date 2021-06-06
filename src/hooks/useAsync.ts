@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useRef, useState } from "react";
 
 interface IState<D> {
   error: Error | null;
@@ -25,42 +25,55 @@ const useAsync = <D>(
     ...defaultInitialState,
     ...initialState,
   });
+  const retry = useRef<() => void>(() => {});
 
-  const setData = (data: D) =>
-    setState({
-      data,
-      status: "success",
-      error: null,
-    });
+  const setData = useCallback(
+    (data: D) =>
+      setState({
+        data,
+        status: "success",
+        error: null,
+      }),
+    []
+  );
 
-  const setError = (error: Error) =>
-    setState({
-      data: null,
-      status: "error",
-      error,
-    });
+  const setError = useCallback(
+    (error: Error) =>
+      setState({
+        data: null,
+        status: "error",
+        error,
+      }),
+    []
+  );
 
-  const run = (promise: Promise<D>) => {
-    if (!promise || !promise.then) {
-      throw new Error("请传入 promise 或者 thenable 类型数据");
-    }
+  const run = useCallback(
+    (promise: Promise<D>, runConfig?: { retry: () => Promise<D> }) => {
+      if (!promise || !promise.then) {
+        throw new Error("请传入 promise 或者 thenable 类型数据");
+      }
+      retry.current = () => {
+        if (runConfig?.retry) run(runConfig?.retry(), runConfig);
+      };
+      setState((state) => ({ ...state, status: "loading" }));
 
-    setState({ ...state, status: "loading" });
-
-    return promise
-      .then((data) => {
-        setData(data);
-        return data;
-      })
-      .catch((error) => {
-        setError(error);
-        if (config.throwOnError) {
-          return Promise.reject(error);
-        } else {
-          return error;
-        }
-      });
-  };
+      return promise
+        .then((data) => {
+          setData(data);
+          return data;
+        })
+        .catch((error) => {
+          setError(error);
+          if (config.throwOnError) {
+            return Promise.reject(error);
+          } else {
+            return error;
+          }
+        });
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [setData, setError]
+  );
 
   return {
     isIdle: state.status === "idle",
@@ -68,6 +81,7 @@ const useAsync = <D>(
     isError: state.status === "error",
     isSuccess: state.status === "success",
     run,
+    retry: retry.current,
     setData,
     setError,
     ...state,

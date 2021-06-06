@@ -1,19 +1,36 @@
-import { FC } from "react";
+import { memo } from "react";
 import { Link } from "react-router-dom";
 import { Table, TableProps } from "antd";
 import dayjs from "dayjs";
 import { IUser } from "typings/user";
 import { IProject } from "./typings";
+import Pin from "components/Pin";
+import useEditProject from "./useEditProject";
 
 interface IProps extends TableProps<IProject> {
   users: IUser[];
+  refresh?: () => void;
 }
-const List: FC<IProps> = ({ users, ...rest }) => {
+const List = ({ users, refresh, ...rest }: IProps) => {
+  const { mutate } = useEditProject();
+  const pinProject = (id: number) => (pin: boolean) =>
+    mutate({ id, pin }).then(refresh);
   return (
     <Table
       rowKey="id"
       pagination={false}
       columns={[
+        {
+          title: <Pin checked={true} disabled={true} />,
+          render(value, project) {
+            return (
+              <Pin
+                checked={project.pin}
+                onCheckedChange={pinProject(project.id)}
+              />
+            );
+          },
+        },
         {
           title: "名称",
           sorter: (a, b) => a.name.localeCompare(b.name),
@@ -54,4 +71,4 @@ const List: FC<IProps> = ({ users, ...rest }) => {
   );
 };
 
-export default List;
+export default memo(List);

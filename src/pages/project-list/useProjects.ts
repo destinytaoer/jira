@@ -6,8 +6,9 @@ import { IProject } from "./typings";
 const useProjects = (param?: Partial<IProject>) => {
   const client = useHttp();
   const { run, ...result } = useAsync<IProject[]>();
+  const fetchProjects = () => client("projects", { data: param });
   useEffect(() => {
-    run(client("projects", { data: param }));
+    run(fetchProjects(), { retry: fetchProjects });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [param]);
 
