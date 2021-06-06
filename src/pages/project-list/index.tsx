@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, memo } from "react";
 import styled from "@emotion/styled";
 import { Typography } from "antd";
 
@@ -9,12 +9,10 @@ import useDebounce from "hooks/useDebounce";
 import useProjects from "./useProjects";
 import useUsers from "./useUsers";
 import useDocumentTitle from "hooks/useDocumentTitle";
+import useUrlQueryParam from "hooks/useUrlQueryParam";
 
 const ProjectListPage = () => {
-  const [param, setParam] = useState({
-    name: "",
-    personId: "",
-  });
+  const [param, setParam] = useUrlQueryParam(["name", "personId"]);
   const debounceParam = useDebounce(param);
   const { isLoading, error, data: list } = useProjects(debounceParam);
 
@@ -34,8 +32,10 @@ const ProjectListPage = () => {
   );
 };
 
+ProjectListPage.whyDidYouRender = true;
+
 const Container = styled.div`
   padding: 3.2rem;
 `;
 
-export default ProjectListPage;
+export default memo(ProjectListPage);
