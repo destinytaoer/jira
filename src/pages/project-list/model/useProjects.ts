@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import useAsync from "hooks/useAsync";
 import { useHttp } from "utils/http";
-import { IProject } from "./typings";
+import { IProject } from "../typings";
 
 const useProjects = (param?: Partial<IProject>) => {
   const client = useHttp();

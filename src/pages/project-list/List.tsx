@@ -5,7 +5,7 @@ import dayjs from "dayjs";
 import { IUser } from "typings/user";
 import { IProject } from "./typings";
 import Pin from "components/Pin";
-import useEditProject from "./useEditProject";
+import useEditProject from "./model/useEditProject";
 
 interface IProps extends TableProps<IProject> {
   users: IUser[];

@@ -1,6 +1,6 @@
 import { useHttp } from "utils/http";
 import useAsync from "hooks/useAsync";
-import { IProject } from "./typings";
+import { IProject } from "../typings";
 
 const useEditProject = () => {
   const { run, ...result } = useAsync();
