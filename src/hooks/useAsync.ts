@@ -1,4 +1,5 @@
 import { useCallback, useRef, useState } from "react";
+import useIsMounted from "./useIsMounted";
 
 interface IState<D> {
   error: Error | null;
@@ -25,6 +26,7 @@ const useAsync = <D>(
     ...defaultInitialState,
     ...initialState,
   });
+  const isMounted = useIsMounted();
   const retry = useRef<() => void>(() => {});
 
   const setData = useCallback(
@@ -59,7 +61,10 @@ const useAsync = <D>(
 
       return promise
         .then((data) => {
-          setData(data);
+          // 阻止在已卸载组件上赋值
+          if (isMounted()) {
+            setData(data);
+          }
           return data;
         })
         .catch((error) => {
