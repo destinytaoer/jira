@@ -1,8 +1,9 @@
 import { memo } from "react";
 import styled from "@emotion/styled";
-import { Typography } from "antd";
+import { Typography, Button } from "antd";
 
 import List from "./List";
+import { Row } from "components/lib";
 import SearchPanel from "./SearchPanel";
 import useDebounce from "hooks/useDebounce";
 
@@ -11,7 +12,11 @@ import useUsers from "../../hooks/useUsers";
 import useDocumentTitle from "hooks/useDocumentTitle";
 import useProjectSearchParams from "./model/useProjectSearchParams";
 
-const ProjectListPage = () => {
+const ProjectListPage = ({
+  setProjectModalVisible,
+}: {
+  setProjectModalVisible: (visible: boolean) => void;
+}) => {
   useDocumentTitle("项目列表");
 
   const [param, setParam] = useProjectSearchParams();
@@ -22,7 +27,10 @@ const ProjectListPage = () => {
 
   return (
     <Container>
-      <h2>项目列表</h2>
+      <Row between>
+        <h2>项目列表</h2>
+        <Button onClick={() => setProjectModalVisible(true)}>创建项目</Button>
+      </Row>
       <SearchPanel param={param} users={users ?? []} setParam={setParam} />
       {error ? (
         <Typography.Text type="danger">{error.message}</Typography.Text>
@@ -32,6 +40,7 @@ const ProjectListPage = () => {
         loading={isLoading}
         dataSource={list ?? []}
         users={users ?? []}
+        setProjectModalVisible={setProjectModalVisible}
       />
     </Container>
   );

@@ -1,14 +1,16 @@
-import { FC, memo } from "react";
+import { FC, memo, useState } from "react";
 import { Navigate, Route, Routes } from "react-router";
 import { BrowserRouter as Router } from "react-router-dom";
-import { Button, Dropdown, Menu } from "antd";
+import { Dropdown, Menu } from "antd";
 import ProjectListPage from "pages/project-list";
 import { useAuth } from "context/authContext";
 import styled from "@emotion/styled";
-import { Row } from "components/lib";
+import { Row, ButtonNoPadding } from "components/lib";
 import { ReactComponent as SoftwareLogo } from "assets/software-logo.svg";
 import ProjectPage from "pages/project";
 import { resetRoute } from "utils";
+import ProjectModal from "pages/project-list/ProjectModal";
+import ProjectPopover from "components/ProjectPopover";
 
 /**
  * grid 和 flex 应用场景
@@ -18,34 +20,50 @@ import { resetRoute } from "utils";
  * 从布局出发 grid: 先规划网格(数量一般固定), 然后再把元素往里填充
  */
 const AuthenticatedApp: FC = memo(() => {
+  const [projectModalVisible, setProjectModalVisible] = useState(false);
   return (
     <Container>
-      <PageHeader />
+      <PageHeader setProjectModalVisible={setProjectModalVisible} />
       <Main>
         <Router>
           <Routes>
-            <Route path="/projects" element={<ProjectListPage />} />
+            <Route
+              path="/projects"
+              element={
+                <ProjectListPage
+                  setProjectModalVisible={setProjectModalVisible}
+                />
+              }
+            />
             <Route path="/projects/:projectId/*" element={<ProjectPage />} />
             {/* 默认路由 */}
             <Navigate to="/projects" />
           </Routes>
         </Router>
       </Main>
+      <ProjectModal
+        visible={projectModalVisible}
+        onClose={() => setProjectModalVisible(false)}
+      />
     </Container>
   );
 });
 
-const PageHeader = () => {
+const PageHeader = ({
+  setProjectModalVisible,
+}: {
+  setProjectModalVisible: (visible: boolean) => void;
+}) => {
   const { logout, user } = useAuth();
 
   return (
     <Header between>
       <HeaderLeft gap={true}>
-        <Button type="link" onClick={resetRoute}>
+        <ButtonNoPadding css={{ padding: 0 }} type="link" onClick={resetRoute}>
           <SoftwareLogo width="18rem" color="rgb(38, 132, 255)" />
-        </Button>
-        <h3>项目</h3>
-        <h3>用户</h3>
+        </ButtonNoPadding>
+        <ProjectPopover setProjectModalVisible={setProjectModalVisible} />
+        <span>用户</span>
       </HeaderLeft>
       <HeaderRight>
         <Dropdown
@@ -57,7 +75,7 @@ const PageHeader = () => {
             </Menu>
           }
         >
-          <Button type="link">Hi, {user?.name}</Button>
+          <ButtonNoPadding type="link">Hi, {user?.name}</ButtonNoPadding>
         </Dropdown>
       </HeaderRight>
     </Header>

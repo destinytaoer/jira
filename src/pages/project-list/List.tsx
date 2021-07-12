@@ -1,17 +1,20 @@
 import { memo } from "react";
 import { Link } from "react-router-dom";
-import { Table, TableProps } from "antd";
+import { Table, TableProps, Dropdown, Menu } from "antd";
 import dayjs from "dayjs";
+
+import Pin from "components/Pin";
+import { ButtonNoPadding } from "components/lib";
+import useEditProject from "./model/useEditProject";
 import { IUser } from "typings/user";
 import { IProject } from "./typings";
-import Pin from "components/Pin";
-import useEditProject from "./model/useEditProject";
 
 interface IProps extends TableProps<IProject> {
   users: IUser[];
   refresh?: () => void;
+  setProjectModalVisible: (visible: boolean) => void;
 }
-const List = ({ users, refresh, ...rest }: IProps) => {
+const List = ({ users, refresh, setProjectModalVisible, ...rest }: IProps) => {
   const { mutate } = useEditProject();
   const pinProject = (id: number) => (pin: boolean) =>
     mutate({ id, pin }).then(refresh);
@@ -62,6 +65,26 @@ const List = ({ users, refresh, ...rest }: IProps) => {
                   ? dayjs(project.created).format("YYYY-MM-DD")
                   : "无"}
               </span>
+            );
+          },
+        },
+        {
+          render(value, project) {
+            return (
+              <Dropdown
+                overlay={
+                  <Menu>
+                    <Menu.Item
+                      onClick={() => setProjectModalVisible(true)}
+                      key="edit"
+                    >
+                      <ButtonNoPadding type="link">编辑</ButtonNoPadding>
+                    </Menu.Item>
+                  </Menu>
+                }
+              >
+                <ButtonNoPadding type="link">...</ButtonNoPadding>
+              </Dropdown>
             );
           },
         },
