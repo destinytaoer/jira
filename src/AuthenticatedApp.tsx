@@ -23,7 +23,16 @@ const AuthenticatedApp: FC = memo(() => {
   const [projectModalVisible, setProjectModalVisible] = useState(false);
   return (
     <Container>
-      <PageHeader setProjectModalVisible={setProjectModalVisible} />
+      <PageHeader
+        projectButton={
+          <ButtonNoPadding
+            type="link"
+            onClick={() => setProjectModalVisible(true)}
+          >
+            创建项目
+          </ButtonNoPadding>
+        }
+      />
       <Main>
         <Router>
           <Routes>
@@ -31,7 +40,14 @@ const AuthenticatedApp: FC = memo(() => {
               path="/projects"
               element={
                 <ProjectListPage
-                  setProjectModalVisible={setProjectModalVisible}
+                  projectButton={
+                    <ButtonNoPadding
+                      type="link"
+                      onClick={() => setProjectModalVisible(true)}
+                    >
+                      创建项目
+                    </ButtonNoPadding>
+                  }
                 />
               }
             />
@@ -49,11 +65,7 @@ const AuthenticatedApp: FC = memo(() => {
   );
 });
 
-const PageHeader = ({
-  setProjectModalVisible,
-}: {
-  setProjectModalVisible: (visible: boolean) => void;
-}) => {
+const PageHeader = ({ projectButton }: { projectButton: JSX.Element }) => {
   const { logout, user } = useAuth();
 
   return (
@@ -62,7 +74,7 @@ const PageHeader = ({
         <ButtonNoPadding css={{ padding: 0 }} type="link" onClick={resetRoute}>
           <SoftwareLogo width="18rem" color="rgb(38, 132, 255)" />
         </ButtonNoPadding>
-        <ProjectPopover setProjectModalVisible={setProjectModalVisible} />
+        <ProjectPopover projectButton={projectButton} />
         <span>用户</span>
       </HeaderLeft>
       <HeaderRight>

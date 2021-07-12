@@ -12,9 +12,9 @@ import { IProject } from "./typings";
 interface IProps extends TableProps<IProject> {
   users: IUser[];
   refresh?: () => void;
-  setProjectModalVisible: (visible: boolean) => void;
+  projectButton: JSX.Element;
 }
-const List = ({ users, refresh, setProjectModalVisible, ...rest }: IProps) => {
+const List = ({ users, refresh, projectButton, ...rest }: IProps) => {
   const { mutate } = useEditProject();
   const pinProject = (id: number) => (pin: boolean) =>
     mutate({ id, pin }).then(refresh);
@@ -74,11 +74,9 @@ const List = ({ users, refresh, setProjectModalVisible, ...rest }: IProps) => {
               <Dropdown
                 overlay={
                   <Menu>
-                    <Menu.Item
-                      onClick={() => setProjectModalVisible(true)}
-                      key="edit"
-                    >
-                      <ButtonNoPadding type="link">编辑</ButtonNoPadding>
+                    <Menu.Item key="edit">
+                      {projectButton}
+                      {/* <ButtonNoPadding type="link">编辑</ButtonNoPadding> */}
                     </Menu.Item>
                   </Menu>
                 }

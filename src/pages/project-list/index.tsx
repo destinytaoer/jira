@@ -12,11 +12,7 @@ import useUsers from "../../hooks/useUsers";
 import useDocumentTitle from "hooks/useDocumentTitle";
 import useProjectSearchParams from "./model/useProjectSearchParams";
 
-const ProjectListPage = ({
-  setProjectModalVisible,
-}: {
-  setProjectModalVisible: (visible: boolean) => void;
-}) => {
+const ProjectListPage = ({ projectButton }: { projectButton: JSX.Element }) => {
   useDocumentTitle("项目列表");
 
   const [param, setParam] = useProjectSearchParams();
@@ -29,7 +25,7 @@ const ProjectListPage = ({
     <Container>
       <Row between>
         <h2>项目列表</h2>
-        <Button onClick={() => setProjectModalVisible(true)}>创建项目</Button>
+        {projectButton}
       </Row>
       <SearchPanel param={param} users={users ?? []} setParam={setParam} />
       {error ? (
@@ -40,7 +36,7 @@ const ProjectListPage = ({
         loading={isLoading}
         dataSource={list ?? []}
         users={users ?? []}
-        setProjectModalVisible={setProjectModalVisible}
+        projectButton={projectButton}
       />
     </Container>
   );
