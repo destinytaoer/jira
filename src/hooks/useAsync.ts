@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useRef, useReducer } from "react";
 import useIsMounted from "./useIsMounted";
 
 interface IState<D> {
@@ -17,36 +17,50 @@ const defaultConfig = {
   throwOnError: false,
 };
 
+const useSafeDispatch = <T>(dispatch: (...args: T[]) => void) => {
+  const isMounted = useIsMounted();
+
+  return useCallback(
+    (...args: T[]) => {
+      isMounted() ? dispatch(...args) : void 0;
+    },
+    [dispatch, isMounted]
+  );
+};
+
 const useAsync = <D>(
   initialState?: IState<D>,
   initialConfig?: typeof defaultConfig
 ) => {
   const config = { ...defaultConfig, ...initialConfig };
-  const [state, setState] = useState({
-    ...defaultInitialState,
-    ...initialState,
-  });
-  const isMounted = useIsMounted();
+  const [state, dispatch] = useReducer(
+    (state: IState<D>, action: Partial<IState<D>>) => ({ ...state, ...action }),
+    {
+      ...defaultInitialState,
+      ...initialState,
+    }
+  );
+  const safeDispatch = useSafeDispatch(dispatch);
   const retry = useRef<() => void>(() => {});
 
   const setData = useCallback(
     (data: D) =>
-      setState({
+      safeDispatch({
         data,
         status: "success",
         error: null,
       }),
-    []
+    [safeDispatch]
   );
 
   const setError = useCallback(
     (error: Error) =>
-      setState({
+      safeDispatch({
         data: null,
         status: "error",
         error,
       }),
-    []
+    [safeDispatch]
   );
 
   const run = useCallback(
@@ -57,17 +71,15 @@ const useAsync = <D>(
       retry.current = () => {
         if (runConfig?.retry) run(runConfig?.retry(), runConfig);
       };
-      setState((state) => ({ ...state, status: "loading" }));
+      safeDispatch({ status: "loading" });
 
       return promise
-        .then((data) => {
+        .then(data => {
           // 阻止在已卸载组件上赋值
-          if (isMounted()) {
-            setData(data);
-          }
+          setData(data);
           return data;
         })
-        .catch((error) => {
+        .catch(error => {
           setError(error);
           if (config.throwOnError) {
             return Promise.reject(error);
@@ -76,8 +88,7 @@ const useAsync = <D>(
           }
         });
     },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [setData, setError]
+    [setData, setError, safeDispatch, config.throwOnError]
   );
 
   return {
