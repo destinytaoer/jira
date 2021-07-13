@@ -8,16 +8,17 @@ import { ButtonNoPadding } from "components/lib";
 import useEditProject from "./model/useEditProject";
 import { IUser } from "typings/user";
 import { IProject } from "./typings";
+import useProjectModal from "./model/useProjectModal";
 
 interface IProps extends TableProps<IProject> {
   users: IUser[];
   refresh?: () => void;
-  projectButton: JSX.Element;
 }
-const List = ({ users, refresh, projectButton, ...rest }: IProps) => {
+const List = ({ users, refresh, ...rest }: IProps) => {
   const { mutate } = useEditProject();
   const pinProject = (id: number) => (pin: boolean) =>
     mutate({ id, pin }).then(refresh);
+  const [, openProjectModal] = useProjectModal();
   return (
     <Table
       rowKey="id"
@@ -50,7 +51,7 @@ const List = ({ users, refresh, projectButton, ...rest }: IProps) => {
           render(value, project) {
             return (
               <span>
-                {users.find((user) => user.id === project.personId)?.name ??
+                {users.find(user => user.id === project.personId)?.name ??
                   "未知"}
               </span>
             );
@@ -75,8 +76,9 @@ const List = ({ users, refresh, projectButton, ...rest }: IProps) => {
                 overlay={
                   <Menu>
                     <Menu.Item key="edit">
-                      {projectButton}
-                      {/* <ButtonNoPadding type="link">编辑</ButtonNoPadding> */}
+                      <ButtonNoPadding type="link" onClick={openProjectModal}>
+                        编辑
+                      </ButtonNoPadding>
                     </Menu.Item>
                   </Menu>
                 }

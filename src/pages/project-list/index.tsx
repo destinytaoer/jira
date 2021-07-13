@@ -11,8 +11,9 @@ import useProjects from "./model/useProjects";
 import useUsers from "../../hooks/useUsers";
 import useDocumentTitle from "hooks/useDocumentTitle";
 import useProjectSearchParams from "./model/useProjectSearchParams";
+import useProjectModal from "./model/useProjectModal";
 
-const ProjectListPage = ({ projectButton }: { projectButton: JSX.Element }) => {
+const ProjectListPage = () => {
   useDocumentTitle("项目列表");
 
   const [param, setParam] = useProjectSearchParams();
@@ -21,11 +22,13 @@ const ProjectListPage = ({ projectButton }: { projectButton: JSX.Element }) => {
 
   const { data: users } = useUsers();
 
+  const [, openProjectModal] = useProjectModal();
+
   return (
     <Container>
       <Row between>
         <h2>项目列表</h2>
-        {projectButton}
+        <Button onClick={openProjectModal}>创建项目</Button>
       </Row>
       <SearchPanel param={param} users={users ?? []} setParam={setParam} />
       {error ? (
@@ -36,7 +39,6 @@ const ProjectListPage = ({ projectButton }: { projectButton: JSX.Element }) => {
         loading={isLoading}
         dataSource={list ?? []}
         users={users ?? []}
-        projectButton={projectButton}
       />
     </Container>
   );

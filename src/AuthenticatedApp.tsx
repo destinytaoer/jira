@@ -20,52 +20,25 @@ import ProjectPopover from "components/ProjectPopover";
  * 从布局出发 grid: 先规划网格(数量一般固定), 然后再把元素往里填充
  */
 const AuthenticatedApp: FC = memo(() => {
-  const [projectModalVisible, setProjectModalVisible] = useState(false);
   return (
     <Container>
-      <PageHeader
-        projectButton={
-          <ButtonNoPadding
-            type="link"
-            onClick={() => setProjectModalVisible(true)}
-          >
-            创建项目
-          </ButtonNoPadding>
-        }
-      />
-      <Main>
-        <Router>
+      <Router>
+        <PageHeader />
+        <Main>
           <Routes>
-            <Route
-              path="/projects"
-              element={
-                <ProjectListPage
-                  projectButton={
-                    <ButtonNoPadding
-                      type="link"
-                      onClick={() => setProjectModalVisible(true)}
-                    >
-                      创建项目
-                    </ButtonNoPadding>
-                  }
-                />
-              }
-            />
+            <Route path="/projects" element={<ProjectListPage />} />
             <Route path="/projects/:projectId/*" element={<ProjectPage />} />
             {/* 默认路由 */}
             <Navigate to="/projects" />
           </Routes>
-        </Router>
-      </Main>
-      <ProjectModal
-        visible={projectModalVisible}
-        onClose={() => setProjectModalVisible(false)}
-      />
+        </Main>
+        <ProjectModal />
+      </Router>
     </Container>
   );
 });
 
-const PageHeader = ({ projectButton }: { projectButton: JSX.Element }) => {
+const PageHeader = () => {
   const { logout, user } = useAuth();
 
   return (
@@ -74,7 +47,7 @@ const PageHeader = ({ projectButton }: { projectButton: JSX.Element }) => {
         <ButtonNoPadding css={{ padding: 0 }} type="link" onClick={resetRoute}>
           <SoftwareLogo width="18rem" color="rgb(38, 132, 255)" />
         </ButtonNoPadding>
-        <ProjectPopover projectButton={projectButton} />
+        <ProjectPopover />
         <span>用户</span>
       </HeaderLeft>
       <HeaderRight>
