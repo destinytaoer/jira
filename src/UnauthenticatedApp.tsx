@@ -7,6 +7,7 @@ import logo from "assets/logo.svg";
 import left from "assets/left.svg";
 import right from "assets/right.svg";
 import useDocumentTitle from "hooks/useDocumentTitle";
+import { ErrorBox } from "components/lib";
 
 const UnauthenticatedApp: FC = memo(() => {
   const [isRegister, setRegister] = useState(false);
@@ -20,9 +21,7 @@ const UnauthenticatedApp: FC = memo(() => {
       <Background />
       <ShadowCard>
         <Title>{isRegister ? "请注册" : "请登录"}</Title>
-        {error ? (
-          <Typography.Text type="danger">{error.message}</Typography.Text>
-        ) : null}
+        <ErrorBox error={error} />
         {isRegister ? (
           <RegisterPage onError={setError} />
         ) : (

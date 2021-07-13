@@ -1,18 +1,11 @@
-import { useEffect } from "react";
-import useAsync from "hooks/useAsync";
 import { useHttp } from "utils/http";
 import { IProject } from "../typings";
+import { useQuery } from "react-query";
 
 const useProjects = (param?: Partial<IProject>) => {
   const client = useHttp();
-  const { run, ...result } = useAsync<IProject[]>();
   const fetchProjects = () => client("projects", { data: param });
-  useEffect(() => {
-    run(fetchProjects(), { retry: fetchProjects });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [param]);
 
-  return result;
+  return useQuery<IProject[]>(["projects", param], fetchProjects);
 };
-
 export default useProjects;

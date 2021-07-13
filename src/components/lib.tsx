@@ -6,11 +6,11 @@ export const Row = styled.div<{ gap?: number | boolean; between?: boolean }>`
   display: flex;
   flex-direction: row;
   align-items: center;
-  justify-content: ${(props) => (props.between ? "space-between" : undefined)};
+  justify-content: ${props => (props.between ? "space-between" : undefined)};
   > * {
     margin-top: 0 !important;
     margin-bottom: 0 !important;
-    margin-right: ${(props) =>
+    margin-right: ${props =>
       typeof props.gap === "number"
         ? props.gap + "rem"
         : props.gap
@@ -42,3 +42,12 @@ export const FullPageErrorFallback = ({ error }: { error: Error | null }) => (
 export const ButtonNoPadding = styled(Button)`
   padding: 0;
 `;
+
+// 类型守卫
+const isError = (value: any): value is Error => value?.message;
+export const ErrorBox = ({ error }: { error: unknown }) => {
+  if (isError(error)) {
+    return <Typography.Text type="danger">{error.message}</Typography.Text>;
+  }
+  return null;
+};

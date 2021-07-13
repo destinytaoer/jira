@@ -12,12 +12,10 @@ import useProjectModal from "./model/useProjectModal";
 
 interface IProps extends TableProps<IProject> {
   users: IUser[];
-  refresh?: () => void;
 }
-const List = ({ users, refresh, ...rest }: IProps) => {
+const List = ({ users, ...rest }: IProps) => {
   const { mutate } = useEditProject();
-  const pinProject = (id: number) => (pin: boolean) =>
-    mutate({ id, pin }).then(refresh);
+  const pinProject = (id: number) => (pin: boolean) => mutate({ id, pin });
   const [, openProjectModal] = useProjectModal();
   return (
     <Table

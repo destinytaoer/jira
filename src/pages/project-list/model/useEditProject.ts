@@ -1,22 +1,19 @@
 import { useHttp } from "utils/http";
-import useAsync from "hooks/useAsync";
 import { IProject } from "../typings";
+import { useMutation, useQueryClient } from "react-query";
 
 const useEditProject = () => {
-  const { run, ...result } = useAsync();
   const client = useHttp();
-  const mutate = (params: Partial<IProject>) =>
-    run(
+  const queryClient = useQueryClient();
+
+  return useMutation(
+    (params: Partial<IProject>) =>
       client(`projects/${params.id}`, {
         data: params,
         method: "PATCH",
-      })
-    );
-
-  return {
-    mutate,
-    ...result,
-  };
+      }),
+    { onSuccess: () => queryClient.invalidateQueries("projects") }
+  );
 };
 
 export default useEditProject;

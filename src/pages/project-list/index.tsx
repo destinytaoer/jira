@@ -1,9 +1,9 @@
 import { memo } from "react";
 import styled from "@emotion/styled";
-import { Typography, Button } from "antd";
+import { Button } from "antd";
 
 import List from "./List";
-import { Row } from "components/lib";
+import { Row, ErrorBox } from "components/lib";
 import SearchPanel from "./SearchPanel";
 import useDebounce from "hooks/useDebounce";
 
@@ -18,7 +18,7 @@ const ProjectListPage = () => {
 
   const [param, setParam] = useProjectSearchParams();
   const debounceParam = useDebounce(param);
-  const { isLoading, error, data: list, retry } = useProjects(debounceParam);
+  const { isLoading, error, data: list } = useProjects(debounceParam);
 
   const { data: users } = useUsers();
 
@@ -31,15 +31,8 @@ const ProjectListPage = () => {
         <Button onClick={openProjectModal}>创建项目</Button>
       </Row>
       <SearchPanel param={param} users={users ?? []} setParam={setParam} />
-      {error ? (
-        <Typography.Text type="danger">{error.message}</Typography.Text>
-      ) : null}
-      <List
-        refresh={retry}
-        loading={isLoading}
-        dataSource={list ?? []}
-        users={users ?? []}
-      />
+      <ErrorBox error={error} />
+      <List loading={isLoading} dataSource={list ?? []} users={users ?? []} />
     </Container>
   );
 };
