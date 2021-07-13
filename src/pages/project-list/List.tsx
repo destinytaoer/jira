@@ -1,4 +1,5 @@
 import { memo } from "react";
+import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import { Table, TableProps, Dropdown, Menu } from "antd";
 import dayjs from "dayjs";
@@ -6,15 +7,16 @@ import dayjs from "dayjs";
 import Pin from "components/Pin";
 import { ButtonNoPadding } from "components/lib";
 import useEditProject from "./model/useEditProject";
+import { projectListActions } from "./ProjectList.slice";
 import { IUser } from "typings/user";
 import { IProject } from "./typings";
 
 interface IProps extends TableProps<IProject> {
   users: IUser[];
   refresh?: () => void;
-  projectButton: JSX.Element;
 }
-const List = ({ users, refresh, projectButton, ...rest }: IProps) => {
+const List = ({ users, refresh, ...rest }: IProps) => {
+  const dispatch = useDispatch();
   const { mutate } = useEditProject();
   const pinProject = (id: number) => (pin: boolean) =>
     mutate({ id, pin }).then(refresh);
@@ -50,7 +52,7 @@ const List = ({ users, refresh, projectButton, ...rest }: IProps) => {
           render(value, project) {
             return (
               <span>
-                {users.find((user) => user.id === project.personId)?.name ??
+                {users.find(user => user.id === project.personId)?.name ??
                   "未知"}
               </span>
             );
@@ -75,8 +77,14 @@ const List = ({ users, refresh, projectButton, ...rest }: IProps) => {
                 overlay={
                   <Menu>
                     <Menu.Item key="edit">
-                      {projectButton}
-                      {/* <ButtonNoPadding type="link">编辑</ButtonNoPadding> */}
+                      <ButtonNoPadding
+                        type="link"
+                        onClick={() =>
+                          dispatch(projectListActions.openProjectModal())
+                        }
+                      >
+                        编辑
+                      </ButtonNoPadding>
                     </Menu.Item>
                   </Menu>
                 }
