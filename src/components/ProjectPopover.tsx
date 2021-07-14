@@ -8,7 +8,7 @@ const ProjectPopover = () => {
   const { data: projects, isLoading } = useProjects();
   const pinnedProjects = projects?.filter(project => project.pin) ?? [];
 
-  const [, openProjectModal] = useProjectModal();
+  const { open: openProjectModal } = useProjectModal();
 
   const content = (
     <ContentContainer>

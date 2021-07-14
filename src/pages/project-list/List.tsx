@@ -15,8 +15,9 @@ interface IProps extends TableProps<IProject> {
 }
 const List = ({ users, ...rest }: IProps) => {
   const { mutate } = useEditProject();
+  const { startEdit } = useProjectModal();
   const pinProject = (id: number) => (pin: boolean) => mutate({ id, pin });
-  const [, openProjectModal] = useProjectModal();
+  const editProject = (id: number) => () => startEdit(id);
   return (
     <Table
       rowKey="id"
@@ -74,7 +75,10 @@ const List = ({ users, ...rest }: IProps) => {
                 overlay={
                   <Menu>
                     <Menu.Item key="edit">
-                      <ButtonNoPadding type="link" onClick={openProjectModal}>
+                      <ButtonNoPadding
+                        type="link"
+                        onClick={editProject(project.id)}
+                      >
                         编辑
                       </ButtonNoPadding>
                     </Menu.Item>

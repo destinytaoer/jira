@@ -22,7 +22,7 @@ const ProjectListPage = () => {
 
   const { data: users } = useUsers();
 
-  const [, openProjectModal] = useProjectModal();
+  const { open: openProjectModal } = useProjectModal();
 
   return (
     <Container>
