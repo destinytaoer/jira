@@ -1,10 +1,10 @@
 import { useHttp } from "utils/http";
 import { IProject } from "../typings";
-import { useMutation, useQueryClient } from "react-query";
+import { QueryKey, useMutation } from "react-query";
+import { useEditConfig } from "hooks/useOptimisticOptions";
 
-const useEditProject = () => {
+const useEditProject = (queryKey: QueryKey) => {
   const client = useHttp();
-  const queryClient = useQueryClient();
 
   return useMutation(
     (params: Partial<IProject>) =>
@@ -12,7 +12,7 @@ const useEditProject = () => {
         data: params,
         method: "PATCH",
       }),
-    { onSuccess: () => queryClient.invalidateQueries("projects") }
+    useEditConfig(queryKey)
   );
 };
 

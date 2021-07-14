@@ -8,6 +8,7 @@ import useProjectModal from "./model/useProjectModal";
 import useEditProject from "./model/useEditProject";
 import useAddProject from "./model/useAddProject";
 import styled from "@emotion/styled";
+import { useProjectsQueryKey } from "./model/useProjectSearchParams";
 
 const ProjectModal = () => {
   const { projectModalVisible, close, editingProject, isLoading } =
@@ -18,7 +19,7 @@ const ProjectModal = () => {
     mutateAsync,
     error: mutateError,
     isLoading: mutateLoading,
-  } = useMutateProject();
+  } = useMutateProject(useProjectsQueryKey());
 
   const [form] = useForm();
   const handleFinish = (values: any) => {

@@ -1,10 +1,10 @@
 import { useHttp } from "utils/http";
 import { IProject } from "../typings";
-import { useMutation, useQueryClient } from "react-query";
+import { QueryKey, useMutation } from "react-query";
+import { useAddConfig } from "hooks/useOptimisticOptions";
 
-const useAddProject = () => {
+const useAddProject = (queryKey: QueryKey) => {
   const client = useHttp();
-  const queryClient = useQueryClient();
 
   return useMutation(
     (params: Partial<IProject>) =>
@@ -12,7 +12,7 @@ const useAddProject = () => {
         data: params,
         method: "POST",
       }),
-    { onSuccess: () => queryClient.invalidateQueries("projects") }
+    useAddConfig(queryKey)
   );
 };
 

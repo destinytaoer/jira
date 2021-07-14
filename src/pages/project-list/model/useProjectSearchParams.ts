@@ -15,4 +15,9 @@ const useProjectSearchParams = () => {
   ] as const;
 };
 
+export const useProjectsQueryKey = () => [
+  "projects",
+  useProjectSearchParams()[0],
+];
+
 export default useProjectSearchParams;
