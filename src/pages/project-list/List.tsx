@@ -28,6 +28,7 @@ const List = ({ users, ...rest }: IProps) => {
           render(value, project) {
             return (
               <Pin
+                key={project.id}
                 checked={project.pin}
                 onCheckedChange={pinProject(project.id)}
               />
