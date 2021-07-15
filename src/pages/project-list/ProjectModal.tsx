@@ -14,6 +14,11 @@ const ProjectModal = () => {
   const { projectModalVisible, close, editingProject, isLoading } =
     useProjectModal();
 
+  const closeModal = () => {
+    form.resetFields();
+    close();
+  };
+
   const useMutateProject = editingProject ? useEditProject : useAddProject;
   const {
     mutateAsync,
@@ -32,11 +37,7 @@ const ProjectModal = () => {
   const title = editingProject ? "编辑项目" : "创建项目";
 
   useEffect(() => {
-    if (!editingProject) {
-      form.resetFields();
-    } else {
-      form.setFieldsValue(editingProject);
-    }
+    form.setFieldsValue(editingProject);
   }, [editingProject, form]);
 
   return (
@@ -44,7 +45,7 @@ const ProjectModal = () => {
       forceRender={true}
       visible={projectModalVisible}
       width={"100%"}
-      onClose={close}
+      onClose={closeModal}
     >
       <Container>
         {isLoading ? (
