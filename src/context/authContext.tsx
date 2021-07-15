@@ -2,6 +2,7 @@ import { FullPageErrorFallback, FullPageLoading } from "components/lib";
 import useAsync from "hooks/useAsync";
 import useMount from "hooks/useMount";
 import { createContext, ReactNode, useContext } from "react";
+import { useQueryClient } from "react-query";
 import { IAuthForm, IUser } from "typings/user";
 import { http } from "utils/http";
 import * as auth from "../auth";
@@ -39,10 +40,15 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     error,
     setData: setUser,
   } = useAsync<IUser | null>();
+  const queryClient = useQueryClient();
 
   const login = (form: IAuthForm) => auth.login(form).then(setUser);
   const register = (form: IAuthForm) => auth.register(form).then(setUser);
-  const logout = () => auth.logout().then(() => setUser(null));
+  const logout = () =>
+    auth.logout().then(() => {
+      setUser(null);
+      queryClient.clear();
+    });
 
   useMount(() => {
     run(initUser());
