@@ -7,7 +7,7 @@ import Pin from "components/Pin";
 import { ButtonNoPadding } from "components/lib";
 import useEditProject from "./model/useEditProject";
 import { IUser } from "typings/user";
-import { IProject } from "./typings";
+import { IProject } from "../../typings/project";
 import useProjectModal from "./model/useProjectModal";
 import { useProjectsQueryKey } from "./model/useProjectSearchParams";
 import useDeleteProject from "./model/useDeleteProject";

@@ -1,5 +1,5 @@
 import { useHttp } from "utils/http";
-import { IProject } from "../typings";
+import { IProject } from "../../../typings/project";
 import { QueryKey, useMutation } from "react-query";
 import { useEditConfig } from "hooks/useOptimisticOptions";
 

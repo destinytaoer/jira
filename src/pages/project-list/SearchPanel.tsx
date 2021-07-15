@@ -1,5 +1,5 @@
 import { FC, memo } from "react";
-import { IProject } from "./typings";
+import { IProject } from "../../typings/project";
 import { IUser } from "typings/user";
 import { Form, Input } from "antd";
 import UserSelect from "components/UserSelect";
@@ -18,7 +18,7 @@ const SearchPanel: FC<IProps> = ({ param, users, setParam }) => {
           placeholder="项目名"
           type="text"
           value={param.name}
-          onChange={(e) =>
+          onChange={e =>
             setParam({
               ...param,
               name: e.target.value,
@@ -29,7 +29,7 @@ const SearchPanel: FC<IProps> = ({ param, users, setParam }) => {
       <Form.Item>
         <UserSelect
           value={param.personId}
-          onChange={(value) => setParam({ ...param, personId: value })}
+          onChange={value => setParam({ ...param, personId: value })}
           defaultOptionName="负责人"
         />
       </Form.Item>

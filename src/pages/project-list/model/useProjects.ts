@@ -1,5 +1,5 @@
 import { useHttp } from "utils/http";
-import { IProject } from "../typings";
+import { IProject } from "../../../typings/project";
 import { useQuery } from "react-query";
 
 const useProjects = (param?: Partial<IProject>) => {

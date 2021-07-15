@@ -15,7 +15,7 @@ const ProjectPage = memo(() => {
         <Route path="/kanban" element={<KanbanPage />} />
         {/* projects/:projectId/epic */}
         <Route path="/epic" element={<EpicPage />} />
-        <Navigate to={window.location.pathname + "/kanban"} />
+        <Navigate to={window.location.pathname + "/kanban"} replace={true} />
       </Routes>
     </div>
   );
