@@ -1,10 +1,15 @@
-import useUrlQueryParam from "hooks/useUrlQueryParam";
+import useUrlQueryParam, { useSetUrlSearchParam } from "hooks/useUrlQueryParam";
 import { useCallback } from "react";
 import useProject from "./useProject";
 
 const useProjectModal = () => {
-  const [{ projectCreate, editingProjectId }, setProjectQuery] =
-    useUrlQueryParam(["projectCreate", "editingProjectId"]);
+  const [{ projectCreate }, setProjectQuery] = useUrlQueryParam([
+    "projectCreate",
+  ]);
+  const [{ editingProjectId }, setProjectId] = useUrlQueryParam([
+    "editingProjectId",
+  ]);
+  const setUrlParams = useSetUrlSearchParam();
 
   const { data: editingProject, isLoading } = useProject(
     Number(editingProjectId)
@@ -15,12 +20,12 @@ const useProjectModal = () => {
     [setProjectQuery]
   );
   const close = useCallback(() => {
-    setProjectQuery({ projectCreate: undefined, editingProjectId: undefined });
-  }, [setProjectQuery]);
+    setUrlParams({ projectCreate: "", editingProjectId: "" });
+  }, [setUrlParams]);
 
   const startEdit = useCallback(
-    (id: number) => setProjectQuery({ editingProjectId: id }),
-    [setProjectQuery]
+    (id: number) => setProjectId({ editingProjectId: id }),
+    [setProjectId]
   );
 
   return {
