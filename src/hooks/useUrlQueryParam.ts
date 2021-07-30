@@ -27,13 +27,16 @@ const useUrlQueryParam = <K extends string>(keys: K[]) => {
 
 export const useSetUrlSearchParam = () => {
   const [searchParams, setSearchParam] = useSearchParams();
-  return (params: { [key in string]: unknown }) => {
-    const obj = cleanObject({
-      ...Object.fromEntries(searchParams),
-      ...params,
-    }) as URLSearchParams;
-    setSearchParam(obj);
-  };
+  return useCallback(
+    (params: { [key in string]: unknown }) => {
+      const obj = cleanObject({
+        ...Object.fromEntries(searchParams),
+        ...params,
+      }) as URLSearchParams;
+      setSearchParam(obj);
+    },
+    [searchParams, setSearchParam]
+  );
 };
 
 export default useUrlQueryParam;
