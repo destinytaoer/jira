@@ -5,6 +5,7 @@ import { useKanbanSearchParams, useProjectInUrl } from "./util";
 import { KanbanColumn } from "./KanbanColumn";
 import styled from "@emotion/styled";
 import { SearchPanel } from "./SeachPanel";
+import { PageContainer } from "components/lib";
 
 const KanbanPage = memo(() => {
   useDocumentTitle("看板列表");
@@ -13,7 +14,7 @@ const KanbanPage = memo(() => {
   const { data: kanbans } = useKanbans(useKanbanSearchParams());
   console.log(currentProject, kanbans);
   return (
-    <div>
+    <PageContainer>
       <h1>{currentProject?.name}看板</h1>
       <SearchPanel />
       <ColumnsContainer>
@@ -21,13 +22,12 @@ const KanbanPage = memo(() => {
           <KanbanColumn key={kanban.id} kanban={kanban} />
         ))}
       </ColumnsContainer>
-    </div>
+    </PageContainer>
   );
 });
 
 const ColumnsContainer = styled.div`
   display: flex;
-  overflow: hidden;
-  margin-right: 2rem;
+  flex: 1;
 `;
 export default KanbanPage;
