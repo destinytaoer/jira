@@ -1,7 +1,12 @@
 import useUrlQueryParam from "hooks/useUrlQueryParam";
 import useProject from "pages/project-list/model/useProject";
 import { useMemo } from "react";
+import { QueryKey, useMutation } from "react-query";
 import { useLocation } from "react-router";
+import { useHttp } from "../../utils/http";
+import { useAddConfig } from "../../hooks/useOptimisticOptions";
+import { IKanban } from "../../typings/kanban";
+import { ITask } from "../../typings/task";
 
 export const useProjectIdInUrl = () => {
   const { pathname } = useLocation();
@@ -16,12 +21,7 @@ export const useKanbanSearchParams = () => ({ projectId: useProjectIdInUrl() });
 export const useKanbansQueryKey = () => ["kanbans", useKanbanSearchParams()];
 
 export const useTasksSearchParams = () => {
-  const [param, setParam] = useUrlQueryParam([
-    "name",
-    "typeId",
-    "processId",
-    "tagId",
-  ]);
+  const [param] = useUrlQueryParam(["name", "typeId", "processId", "tagId"]);
   const projectId = useProjectIdInUrl();
   return useMemo(
     () => ({
@@ -35,3 +35,29 @@ export const useTasksSearchParams = () => {
   );
 };
 export const useTasksQueryKey = () => ["tasks", useTasksSearchParams()];
+
+export const useAddKanban = (queryKey: QueryKey) => {
+  const client = useHttp();
+
+  return useMutation(
+    (params: Partial<IKanban>) =>
+      client(`kanbans`, {
+        data: params,
+        method: "POST",
+      }),
+    useAddConfig(queryKey)
+  );
+};
+
+export const useAddTasks = (queryKey: QueryKey) => {
+  const client = useHttp();
+
+  return useMutation(
+    (params: Partial<ITask>) =>
+      client(`tasks`, {
+        data: params,
+        method: "POST",
+      }),
+    useAddConfig(queryKey)
+  );
+};

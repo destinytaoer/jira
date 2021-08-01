@@ -6,6 +6,7 @@ import { useTaskTypes } from "utils/taskType";
 import { useTasksSearchParams } from "./util";
 import taskIcon from "assets/task.svg";
 import bugIcon from "assets/bug.svg";
+import CreateTask from "./CreateTask";
 
 const TaskTypeIcon = ({ id }: { id: number }) => {
   const { data: taskTypes } = useTaskTypes();
@@ -27,12 +28,13 @@ export const KanbanColumn = ({ kanban }: { kanban: IKanban }) => {
             <TaskTypeIcon id={task.typeId} />
           </Card>
         ))}
+        <CreateTask kanbanId={kanban.id} />
       </TasksContainer>
     </Container>
   );
 };
 
-const Container = styled.div`
+export const Container = styled.div`
   min-width: 27rem;
   display: flex;
   flex-direction: column;
@@ -45,6 +47,7 @@ const Container = styled.div`
 const TasksContainer = styled.div`
   overflow: scroll;
   flex: 1;
+
   ::-webkit-scrollbar {
     display: none;
   }
