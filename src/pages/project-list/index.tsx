@@ -1,9 +1,8 @@
 import { memo } from "react";
-import styled from "@emotion/styled";
 import { Button } from "antd";
 
 import List from "./List";
-import { Row, ErrorBox, PageContainer } from "components/lib";
+import { ErrorBox, PageContainer, Row } from "components/lib";
 import SearchPanel from "./SearchPanel";
 import useDebounce from "hooks/useDebounce";
 

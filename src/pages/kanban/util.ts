@@ -1,12 +1,13 @@
 import useUrlQueryParam from "hooks/useUrlQueryParam";
 import useProject from "pages/project-list/model/useProject";
-import { useMemo } from "react";
-import { QueryKey, useMutation } from "react-query";
+import { useCallback, useMemo } from "react";
+import { QueryKey, useMutation, useQuery } from "react-query";
 import { useLocation } from "react-router";
 import { useHttp } from "../../utils/http";
-import { useAddConfig } from "../../hooks/useOptimisticOptions";
+import { useAddConfig, useEditConfig } from "../../hooks/useOptimisticOptions";
 import { IKanban } from "../../typings/kanban";
 import { ITask } from "../../typings/task";
+import useDebounce from "../../hooks/useDebounce";
 
 export const useProjectIdInUrl = () => {
   const { pathname } = useLocation();
@@ -23,15 +24,16 @@ export const useKanbansQueryKey = () => ["kanbans", useKanbanSearchParams()];
 export const useTasksSearchParams = () => {
   const [param] = useUrlQueryParam(["name", "typeId", "processId", "tagId"]);
   const projectId = useProjectIdInUrl();
+  const debounceName = useDebounce(param.name, 200);
   return useMemo(
     () => ({
       projectId,
       typeId: Number(param.typeId) || undefined,
       processId: Number(param.processId) || undefined,
       tagId: Number(param.tagId) || undefined,
-      name: param.name,
+      name: debounceName,
     }),
-    [projectId, param]
+    [projectId, param, debounceName]
   );
 };
 export const useTasksQueryKey = () => ["tasks", useTasksSearchParams()];
@@ -60,4 +62,44 @@ export const useAddTasks = (queryKey: QueryKey) => {
       }),
     useAddConfig(queryKey)
   );
+};
+
+export const useTask = (id?: number) => {
+  const client = useHttp();
+
+  return useQuery<ITask>(["task", { id }], () => client(`tasks/${id}`), {
+    enabled: Boolean(id),
+  });
+};
+
+export const useEditTask = (queryKey: QueryKey) => {
+  const client = useHttp();
+  return useMutation(
+    (params: Partial<ITask>) =>
+      client(`tasks/${params.id}`, {
+        method: "PATCH",
+        data: params,
+      }),
+    useEditConfig(queryKey)
+  );
+};
+
+export const useTaskModal = () => {
+  const [{ editingTaskId }, setEditingTaskId] = useUrlQueryParam([
+    "editingTaskId",
+  ]);
+  const { data: editingTask, isLoading } = useTask(Number(editingTaskId));
+
+  const startEdit = useCallback(
+    (id: number) => {
+      setEditingTaskId({ editingTaskId: id });
+    },
+    [setEditingTaskId]
+  );
+
+  const close = useCallback(() => {
+    setEditingTaskId({ editingTaskId: "" });
+  }, [setEditingTaskId]);
+
+  return { editingTaskId, editingTask, isLoading, startEdit, close };
 };

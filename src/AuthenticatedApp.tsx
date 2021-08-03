@@ -1,11 +1,11 @@
-import { FC, memo, useState } from "react";
+import { FC, memo } from "react";
 import { Navigate, Route, Routes } from "react-router";
 import { BrowserRouter as Router } from "react-router-dom";
 import { Dropdown, Menu } from "antd";
 import ProjectListPage from "pages/project-list";
 import { useAuth } from "context/authContext";
 import styled from "@emotion/styled";
-import { Row, ButtonNoPadding } from "components/lib";
+import { ButtonNoPadding, Row } from "components/lib";
 import { ReactComponent as SoftwareLogo } from "assets/software-logo.svg";
 import ProjectPage from "pages/project";
 import { resetRoute } from "utils";

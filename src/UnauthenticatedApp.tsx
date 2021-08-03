@@ -1,6 +1,6 @@
 import { FC, memo, useState } from "react";
 import styled from "@emotion/styled";
-import { Button, Card, Divider, Typography } from "antd";
+import { Button, Card, Divider } from "antd";
 import LoginPage from "pages/login";
 import RegisterPage from "pages/register";
 import logo from "assets/logo.svg";

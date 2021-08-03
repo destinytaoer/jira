@@ -13,6 +13,7 @@ import { PageContainer } from "components/lib";
 import { useTasks } from "utils/task";
 import { Spin } from "antd";
 import { CreateKanban } from "./CreateKanban";
+import TaskModal from "./TaskModal";
 
 const KanbanPage = memo(() => {
   useDocumentTitle("看板列表");
@@ -39,6 +40,7 @@ const KanbanPage = memo(() => {
           <CreateKanban />
         </ColumnsContainer>
       )}
+      <TaskModal />
     </PageContainer>
   );
 });
