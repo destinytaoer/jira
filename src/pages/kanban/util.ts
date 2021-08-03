@@ -4,7 +4,11 @@ import { useCallback, useMemo } from "react";
 import { QueryKey, useMutation, useQuery } from "react-query";
 import { useLocation } from "react-router";
 import { useHttp } from "../../utils/http";
-import { useAddConfig, useEditConfig } from "../../hooks/useOptimisticOptions";
+import {
+  useAddConfig,
+  useDeleteConfig,
+  useEditConfig,
+} from "../../hooks/useOptimisticOptions";
 import { IKanban } from "../../typings/kanban";
 import { ITask } from "../../typings/task";
 import useDebounce from "../../hooks/useDebounce";
@@ -51,6 +55,18 @@ export const useAddKanban = (queryKey: QueryKey) => {
   );
 };
 
+export const useDeleteKanban = (queryKey: QueryKey) => {
+  const client = useHttp();
+
+  return useMutation(
+    ({ id }: { id: number }) =>
+      client(`kanbans/${id}`, {
+        method: "DELETE",
+      }),
+    useDeleteConfig(queryKey)
+  );
+};
+
 export const useAddTasks = (queryKey: QueryKey) => {
   const client = useHttp();
 
@@ -81,6 +97,18 @@ export const useEditTask = (queryKey: QueryKey) => {
         data: params,
       }),
     useEditConfig(queryKey)
+  );
+};
+
+export const useDeleteTask = (queryKey: QueryKey) => {
+  const client = useHttp();
+
+  return useMutation(
+    ({ id }: { id: number }) =>
+      client(`tasks/${id}`, {
+        method: "DELETE",
+      }),
+    useDeleteConfig(queryKey)
   );
 };
 
