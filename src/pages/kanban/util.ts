@@ -8,6 +8,8 @@ import {
   useAddConfig,
   useDeleteConfig,
   useEditConfig,
+  useReorderKanbanConfig,
+  useReorderTaskConfig,
 } from "../../hooks/useOptimisticOptions";
 import { IKanban } from "../../typings/kanban";
 import { ITask } from "../../typings/task";
@@ -130,4 +132,35 @@ export const useTaskModal = () => {
   }, [setEditingTaskId]);
 
   return { editingTaskId, editingTask, isLoading, startEdit, close };
+};
+
+export interface SortProps {
+  /* 放在目标 item 的前还是后标识 */
+  type: "before" | "after";
+  /* 目标 item */
+  referenceId: number;
+  /** 重新排序的 item */
+  fromId: number;
+  fromKanbanId?: number;
+  toKanbanId?: number;
+}
+
+export const useReorderKanban = (queryKey: QueryKey) => {
+  const client = useHttp();
+  return useMutation((params: SortProps) => {
+    return client("kanbans/reorder", {
+      data: params,
+      method: "POST",
+    });
+  }, useReorderKanbanConfig(queryKey));
+};
+
+export const useReorderTask = (queryKey: QueryKey) => {
+  const client = useHttp();
+  return useMutation((params: SortProps) => {
+    return client("tasks/reorder", {
+      data: params,
+      method: "POST",
+    });
+  }, useReorderTaskConfig(queryKey));
 };

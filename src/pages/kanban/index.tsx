@@ -1,9 +1,13 @@
-import { memo } from "react";
+import { memo, useCallback } from "react";
 import useDocumentTitle from "hooks/useDocumentTitle";
 import { useKanbans } from "utils/kanban";
 import {
   useKanbanSearchParams,
+  useKanbansQueryKey,
   useProjectInUrl,
+  useReorderKanban,
+  useReorderTask,
+  useTasksQueryKey,
   useTasksSearchParams,
 } from "./util";
 import { KanbanColumn } from "./KanbanColumn";
@@ -14,6 +18,8 @@ import { useTasks } from "utils/task";
 import { Spin } from "antd";
 import { CreateKanban } from "./CreateKanban";
 import TaskModal from "./TaskModal";
+import { DragDropContext, DropResult } from "react-beautiful-dnd";
+import { Drag, Drop, DropChild } from "../../components/drag-and-drop";
 
 const KanbanPage = memo(() => {
   useDocumentTitle("看板列表");
@@ -26,24 +32,88 @@ const KanbanPage = memo(() => {
   const { isLoading: taskIsLoading } = useTasks(useTasksSearchParams());
   const isLoading = kanbanIsLoading || taskIsLoading;
 
+  const onDragEnd = useDragEnd();
+
   return (
-    <PageContainer>
-      <h1>{currentProject?.name}看板</h1>
-      <SearchPanel />
-      {isLoading ? (
-        <Spin />
-      ) : (
-        <ColumnsContainer>
-          {kanbans?.map(kanban => (
-            <KanbanColumn key={kanban.id} kanban={kanban} />
-          ))}
-          <CreateKanban />
-        </ColumnsContainer>
-      )}
-      <TaskModal />
-    </PageContainer>
+    <DragDropContext onDragEnd={onDragEnd}>
+      <PageContainer>
+        <h1>{currentProject?.name}看板</h1>
+        <SearchPanel />
+        {isLoading ? (
+          <Spin />
+        ) : (
+          <ColumnsContainer>
+            <Drop
+              type={"COLUMN"}
+              direction={"horizontal"}
+              droppableId={"kanban"}
+            >
+              <DropChild style={{ display: "flex" }}>
+                {kanbans?.map((kanban, index) => (
+                  <Drag
+                    key={kanban.id}
+                    draggableId={"kanban" + kanban.id}
+                    index={index}
+                  >
+                    <KanbanColumn key={kanban.id} kanban={kanban} />
+                  </Drag>
+                ))}
+              </DropChild>
+            </Drop>
+            <CreateKanban />
+          </ColumnsContainer>
+        )}
+        <TaskModal />
+      </PageContainer>
+    </DragDropContext>
   );
 });
+
+const useDragEnd = () => {
+  const { data: kanbans } = useKanbans(useKanbanSearchParams());
+  const { mutate: reorderKanban } = useReorderKanban(useKanbansQueryKey());
+  const { mutate: reorderTask } = useReorderTask(useTasksQueryKey());
+  const { data: allTasks = [] } = useTasks(useTasksSearchParams());
+  return useCallback(
+    ({ source, destination, type }: DropResult) => {
+      if (!destination) return;
+
+      if (type === "COLUMN") {
+        const fromId = kanbans?.[source.index].id;
+        const toId = kanbans?.[destination.index].id;
+        if (!fromId || !toId || fromId === toId) return;
+        const type = destination.index > source.index ? "after" : "before";
+        reorderKanban({ fromId, type, referenceId: toId });
+      }
+      if (type === "ROW") {
+        const fromKanbanId = +source.droppableId;
+        const toKanbanId = +destination.droppableId;
+
+        const fromTask = allTasks.filter(
+          task => task.kanbanId === fromKanbanId
+        )[source.index];
+        const toTask = allTasks.filter(task => task.kanbanId === toKanbanId)[
+          destination.index
+        ];
+        if (fromTask?.id === toTask?.id) return;
+
+        const type =
+          fromKanbanId === toKanbanId && destination.index > source.index
+            ? "after"
+            : "before";
+
+        reorderTask({
+          fromId: fromTask?.id,
+          type,
+          referenceId: toTask?.id,
+          fromKanbanId,
+          toKanbanId,
+        });
+      }
+    },
+    [allTasks, kanbans, reorderKanban, reorderTask]
+  );
+};
 
 const ColumnsContainer = styled.div`
   display: flex;
