@@ -11,6 +11,7 @@ import ProjectPage from "pages/project";
 import { resetRoute } from "utils";
 import ProjectModal from "pages/project-list/ProjectModal";
 import ProjectPopover from "components/ProjectPopover";
+import UserPopover from "./components/UserPopover";
 
 /**
  * grid 和 flex 应用场景
@@ -48,7 +49,7 @@ const PageHeader = () => {
           <SoftwareLogo width="18rem" color="rgb(38, 132, 255)" />
         </ButtonNoPadding>
         <ProjectPopover />
-        <span>用户</span>
+        <UserPopover />
       </HeaderLeft>
       <HeaderRight>
         <Dropdown

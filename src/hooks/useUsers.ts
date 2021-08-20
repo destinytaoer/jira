@@ -1,15 +1,12 @@
-import useMount from "hooks/useMount";
-import useAsync from "hooks/useAsync";
 import { useHttp } from "utils/http";
 import { IUser } from "typings/user";
+import { useQuery } from "react-query";
 
-const useUsers = () => {
+const useUsers = (param?: Partial<IUser>) => {
   const client = useHttp();
-  const { run, ...result } = useAsync<IUser[]>();
-  useMount(() => {
-    run(client("users"));
-  });
 
-  return result;
+  return useQuery<IUser[]>(["users", param], () =>
+    client("users", { data: param })
+  );
 };
 export default useUsers;
