@@ -14,6 +14,7 @@ import {
 import { IKanban } from "../../typings/kanban";
 import { ITask } from "../../typings/task";
 import useDebounce from "../../hooks/useDebounce";
+import { ITaskType } from "../../typings/taskType";
 
 export const useProjectIdInUrl = () => {
   const { pathname } = useLocation();
@@ -44,6 +45,13 @@ export const useTasksSearchParams = () => {
 };
 export const useTasksQueryKey = () => ["tasks", useTasksSearchParams()];
 
+export const useKanbans = (param?: Partial<IKanban>) => {
+  const client = useHttp();
+  const fetchProjects = () => client("kanbans", { data: param });
+
+  return useQuery<IKanban[]>(["kanbans", param], fetchProjects);
+};
+
 export const useAddKanban = (queryKey: QueryKey) => {
   const client = useHttp();
 
@@ -67,6 +75,13 @@ export const useDeleteKanban = (queryKey: QueryKey) => {
       }),
     useDeleteConfig(queryKey)
   );
+};
+
+export const useTasks = (param?: Partial<ITask>) => {
+  const client = useHttp();
+  const fetchProjects = () => client("tasks", { data: param });
+
+  return useQuery<ITask[]>(["tasks", param], fetchProjects);
 };
 
 export const useAddTasks = (queryKey: QueryKey) => {
@@ -163,4 +178,10 @@ export const useReorderTask = (queryKey: QueryKey) => {
       method: "POST",
     });
   }, useReorderTaskConfig(queryKey));
+};
+export const useTaskTypes = () => {
+  const client = useHttp();
+  const fetchProjects = () => client("taskTypes");
+
+  return useQuery<ITaskType[]>(["taskTypes"], fetchProjects);
 };

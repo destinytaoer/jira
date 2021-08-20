@@ -1,13 +1,13 @@
 import styled from "@emotion/styled";
 import { Button, Card, Dropdown, Menu, Modal } from "antd";
 import { IKanban } from "typings/kanban";
-import { useTasks } from "utils/task";
-import { useTaskTypes } from "utils/taskType";
 import {
   useDeleteKanban,
   useKanbansQueryKey,
   useTaskModal,
+  useTasks,
   useTasksSearchParams,
+  useTaskTypes,
 } from "./util";
 import taskIcon from "assets/task.svg";
 import bugIcon from "assets/bug.svg";

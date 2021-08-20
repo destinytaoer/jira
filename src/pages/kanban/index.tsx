@@ -1,12 +1,13 @@
 import { memo, useCallback } from "react";
 import useDocumentTitle from "hooks/useDocumentTitle";
-import { useKanbans } from "utils/kanban";
 import {
+  useKanbans,
   useKanbanSearchParams,
   useKanbansQueryKey,
   useProjectInUrl,
   useReorderKanban,
   useReorderTask,
+  useTasks,
   useTasksQueryKey,
   useTasksSearchParams,
 } from "./util";
@@ -14,7 +15,6 @@ import { KanbanColumn } from "./KanbanColumn";
 import styled from "@emotion/styled";
 import { SearchPanel } from "./SeachPanel";
 import { PageContainer } from "components/lib";
-import { useTasks } from "utils/task";
 import { Spin } from "antd";
 import { CreateKanban } from "./CreateKanban";
 import TaskModal from "./TaskModal";
